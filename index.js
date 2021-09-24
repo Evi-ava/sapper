@@ -15,8 +15,18 @@ export default class Table {
     }
 
     algo(cell) {
+        this.line.push(cell);
+        cell.dataset.visited = 'true';
+
         const neighbors = this._getNeighbors(cell);
-        console.log(neighbors)
+        const countBombs = this.getCountBombs(neighbors);
+
+        if(countBombs) {
+            cell.innerHTML = countBombs + ''
+        }
+        else {
+
+        }
     }
 
     _getNeighbors(cell) {
@@ -37,6 +47,15 @@ export default class Table {
             }
         }
         return neighbors;
+    }
+
+    getCountBombs(cells = []) {
+        let result = 0;
+        for(const cell of cells) {
+            if (cell.dataset.mined === 'true') result++;
+        }
+
+        return result;
     }
 
     constructor(size = 8) {
