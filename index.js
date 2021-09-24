@@ -1,13 +1,42 @@
 export default class Table {
 
     element = null;
+    line = [];
 
     onClickCell = event => {
-        const cell = event.target.closest('[data-number]');
+        const cell = event.target.closest('[data-column]');
 
         if(cell) {
-            cell.style.background = 'red'
+            cell.dataset.show = 'true';
+            const {row, column} = cell.dataset;
+
+            this.algo(cell);
         }
+    }
+
+    algo(cell) {
+        const neighbors = this._getNeighbors(cell);
+        console.log(neighbors)
+    }
+
+    _getNeighbors(cell) {
+        const neighbors = [];
+
+        let {row, column} = cell.dataset;
+        row = +row;
+        column = +column;
+
+        for(let i = row-1; i <= row+1; i++) {
+            for(let j = column-1; j <= column+1; j++) {
+
+                if(i === row && j === column) continue;
+                const neighbor = this.element.querySelector(`[data-row="${i}"][data-column="${j}"]`);
+
+                if(neighbor) neighbors.push(neighbor);
+
+            }
+        }
+        return neighbors;
     }
 
     constructor(size = 8) {
@@ -47,21 +76,21 @@ export default class Table {
     }
 
     getRows(matrix) {
-        let counter = 0;
+        let numberRow = 0;
 
         return matrix.map(row => {
-            return `<div class="row" data-row="${counter++}">
-                        ${this.getCells(row)}
+            return `<div class="row" data-row="${numberRow+1}">
+                        ${this.getCells(row, numberRow++)}
                     </div>`
         }).join('');
     }
 
-    getCells(row) {
+    getCells(row, numberRow) {
         const is_mined = cell => cell === 1 ? true : false;
 
         let counter = 0;
         return row.map(cell => {
-            return `<div data-number="${counter++}" class="cell" data-show="false" data-mined="${is_mined(cell)}">${cell}</div>`
+            return `<div data-row="${numberRow}" data-column="${counter++}" class="cell" data-show="false" data-mined="${is_mined(cell)}">${cell}</div>`
         }).join('')
     }
 }
