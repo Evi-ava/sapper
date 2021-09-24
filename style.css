@@ -1,0 +1,61 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --light-green: #AAD751;
+    --hard-green: #A2D149;
+
+    --light-beige: #E5C29F;
+    --hard-beige: #D7B899;
+}
+
+body {
+    padding: 50px;
+}
+
+.cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background: var(--hard-green);
+}
+
+.row:nth-child(odd) .cell:nth-child(odd) {
+    background: var(--light-green);
+}
+
+.row:nth-child(even) .cell:nth-child(even) {
+    background: var(--light-green);
+}
+
+/* is show = true  */
+
+.row:nth-child(odd) .cell[data-show="true"]:nth-child(odd) {
+    background: var(--light-beige);
+}
+
+.row:nth-child(even) .cell[data-show="true"]:nth-child(even) {
+    background: var(--light-beige);
+}
+
+.row:nth-child(odd) .cell[data-show="true"]:nth-child(even) {
+    background: var(--hard-beige);
+}
+
+.row:nth-child(even) .cell[data-show="true"]:nth-child(odd) {
+    background: var(--hard-beige);
+}
+
+.row {
+    display: flex;
+}
+
+.cell[data-show="true"][data-mined="true"] {
+    background: red;
+}
