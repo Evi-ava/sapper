@@ -8,24 +8,40 @@ export default class Table {
 
         if(cell) {
             cell.dataset.show = 'true';
+
             const {row, column} = cell.dataset;
 
-            this.algo(cell);
+            const neighbors = this._getNeighbors(cell);
+            const countBombs = this.getCountBombs(neighbors);
+
+            if(countBombs !== 0) {
+                cell.innerHTML = countBombs + '';
+            }
+            else if (countBombs === 0){
+                this.BFS(cell);
+            }
         }
     }
 
-    algo(cell) {
+    BFS(cell) {
         this.line.push(cell);
-        cell.dataset.visited = 'true';
 
-        const neighbors = this._getNeighbors(cell);
-        const countBombs = this.getCountBombs(neighbors);
+        while(this.line.length !== 0) {
+            const v = this.line.shift();
 
-        if(countBombs) {
-            cell.innerHTML = countBombs + ''
-        }
-        else {
+            if(v.dataset.visited === 'true' || v.dataset.mined === 'true') {
+                continue;
+            }
+            v.dataset.visited = 'true';
 
+            const neighbors = this._getNeighbors(v);
+
+            for(const elem of neighbors) {
+                if( this.getCountBombs(this._getNeighbors(elem)) === 0 ) {
+                    elem.style.background = "red";
+                    this.line.push(elem);
+                }
+            }
         }
     }
 
