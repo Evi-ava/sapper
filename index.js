@@ -1,47 +1,56 @@
 export default class Table {
 
     element = null;
-    line = [];
+    // line = [];
 
     onClickCell = event => {
         const cell = event.target.closest('[data-column]');
+        if(!cell) return;
 
-        if(cell) {
+        if(cell.dataset.mined === 'true') {
+            alert('вы проиграли');
+            return;
+        }
+
+        if(cell.dataset.checked === 'true') return;
+
+        const countBombs = this.getCountBombs(this._getNeighbors(cell));
+        if(countBombs) {
+            // если количество бомб соседей не 0;
+            cell.innerHTML    = `${countBombs}`;
             cell.dataset.show = 'true';
-
-            const {row, column} = cell.dataset;
-
-            const neighbors = this._getNeighbors(cell);
-            const countBombs = this.getCountBombs(neighbors);
-
-            if(countBombs !== 0) {
-                cell.innerHTML = countBombs + '';
-            }
-            else if (countBombs === 0){
-                this.BFS(cell);
-            }
+        }
+        else if (countBombs === 0) {
+            // если клетка пуста
+            this.BFS(cell);
         }
     }
 
     BFS(cell) {
-        this.line.push(cell);
+        const line = [];
+        line.push(cell);
+        cell.dataset.visited = 'true';
+        cell.dataset.show = 'true';
 
-        while(this.line.length !== 0) {
-            const v = this.line.shift();
-
-            if(v.dataset.visited === 'true' || v.dataset.mined === 'true') {
-                continue;
-            }
-            v.dataset.visited = 'true';
-
+        while(line.length !== 0) {
+            const v = line.shift();
             const neighbors = this._getNeighbors(v);
 
-            for(const elem of neighbors) {
-                if( this.getCountBombs(this._getNeighbors(elem)) === 0 ) {
-                    elem.style.background = "red";
-                    this.line.push(elem);
-                }
-            }
+            neighbors.forEach(elem => {
+
+                if(elem.dataset.visited === 'true') return;
+
+                elem.dataset.visited = 'true';
+                elem.dataset.around = this.getCountBombs(this._getNeighbors(elem)) + '';
+
+                if(+elem.dataset.around !== 0) elem.innerHTML = elem.dataset.around;
+                elem.dataset.show = 'true';
+            });
+
+            const filteredNeighbors = neighbors.filter(elem => {
+               return +elem.dataset.around === 0;
+            });
+
         }
     }
 
@@ -70,7 +79,6 @@ export default class Table {
         for(const cell of cells) {
             if (cell.dataset.mined === 'true') result++;
         }
-
         return result;
     }
 
@@ -106,7 +114,6 @@ export default class Table {
     }
 
     initHandlers() {
-        console.dir(this.element)
         this.element.addEventListener('click', this.onClickCell);
     }
 
@@ -125,7 +132,9 @@ export default class Table {
 
         let counter = 0;
         return row.map(cell => {
-            return `<div data-row="${numberRow}" data-column="${counter++}" class="cell" data-show="false" data-mined="${is_mined(cell)}">${cell}</div>`
+            return `<div data-row="${numberRow}" data-column="${counter++}" class="cell" data-show="false" data-mined="${is_mined(cell)}">
+                        ${cell ? 'B' : ''}
+                    </div>`
         }).join('')
     }
 }
