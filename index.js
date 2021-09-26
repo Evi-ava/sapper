@@ -4,8 +4,27 @@ export default class Table {
     // line = [];
 
     onRightClickCell = event => {
+        event.preventDefault();
+        if(event.which !== 3) return;
+
+        const cell = event.target.closest('.cell');
+        if(cell === null || cell.dataset.show === 'true') return;
+
+        if(cell.dataset.flag === 'true') {
+            this._removeFlag(cell);
+        }
+        else {
+            cell.dataset.flag = 'true';
+            cell.innerHTML = `<img src="flag.svg" alt="flag" width="50%" height="50%">`;
+        }
 
     }
+
+    _removeFlag(cell) {
+        cell.dataset.flag = 'false';
+        cell.innerHTML = '';
+    }
+
 
     onPointerOver = event => {
         const element = event.target.closest('.cell');
@@ -26,7 +45,7 @@ export default class Table {
     onClickCell = event => {
         const cell = event.target.closest('[data-column]');
         if(!cell) return;
-
+        if(cell.dataset.flag === 'true') return;
         if(cell.dataset.mined === 'true') {
             alert('вы проиграли');
             return;
@@ -65,6 +84,8 @@ export default class Table {
                 elem.dataset.around = this.getCountBombs(this._getNeighbors(elem)) + '';
                 if(+elem.dataset.around !== 0) elem.innerHTML = elem.dataset.around;
                 elem.dataset.show = 'true';
+
+                if(elem.dataset.flag === 'true') this._removeFlag(elem);
             });
 
             const filteredNeighbors = neighbors.filter(elem => {
@@ -141,7 +162,7 @@ export default class Table {
         this.element.addEventListener('click', this.onClickCell);
         this.element.addEventListener('pointerover', this.onPointerOver);
         this.element.addEventListener('pointerout', this.onPointerOut)
-        // this.element.addEventListener('pointerout', this.onPointerOut());
+        this.element.addEventListener('pointerdown', this.onRightClickCell);
     }
 
     getRows(matrix) {
