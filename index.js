@@ -39,18 +39,21 @@ export default class Table {
             neighbors.forEach(elem => {
 
                 if(elem.dataset.visited === 'true') return;
+                // elem.dataset.visited = 'true';
 
-                elem.dataset.visited = 'true';
                 elem.dataset.around = this.getCountBombs(this._getNeighbors(elem)) + '';
-
                 if(+elem.dataset.around !== 0) elem.innerHTML = elem.dataset.around;
                 elem.dataset.show = 'true';
             });
 
             const filteredNeighbors = neighbors.filter(elem => {
-               return +elem.dataset.around === 0;
+               return +elem.dataset.around === 0 && elem.dataset.visited !== 'true';
             });
 
+            line.push(...filteredNeighbors);
+            neighbors.forEach(elem => {
+                elem.dataset.visited = 'true';
+            })
         }
     }
 
@@ -133,7 +136,7 @@ export default class Table {
         let counter = 0;
         return row.map(cell => {
             return `<div data-row="${numberRow}" data-column="${counter++}" class="cell" data-show="false" data-mined="${is_mined(cell)}">
-                        ${cell ? 'B' : ''}
+<!--                        ${cell ? 'B' : ''}-->
                     </div>`
         }).join('')
     }
