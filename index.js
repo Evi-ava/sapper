@@ -3,6 +3,26 @@ export default class Table {
     element = null;
     // line = [];
 
+    onRightClickCell = event => {
+
+    }
+
+    onPointerOver = event => {
+        const element = event.target.closest('.cell');
+
+        if(element && element.dataset.show !== 'true') {
+            element.classList.add('cell_white');
+        }
+    }
+
+    onPointerOut = event => {
+        const element = event.target.closest('.cell_white');
+
+        if(element) {
+            element.classList.remove('cell_white');
+        }
+    }
+
     onClickCell = event => {
         const cell = event.target.closest('[data-column]');
         if(!cell) return;
@@ -13,6 +33,7 @@ export default class Table {
         }
 
         if(cell.dataset.checked === 'true') return;
+        cell.classList.remove('cell_white');
 
         const countBombs = this.getCountBombs(this._getNeighbors(cell));
         if(countBombs) {
@@ -118,6 +139,9 @@ export default class Table {
 
     initHandlers() {
         this.element.addEventListener('click', this.onClickCell);
+        this.element.addEventListener('pointerover', this.onPointerOver);
+        this.element.addEventListener('pointerout', this.onPointerOut)
+        // this.element.addEventListener('pointerout', this.onPointerOut());
     }
 
     getRows(matrix) {

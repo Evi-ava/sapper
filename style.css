@@ -10,6 +10,8 @@
 
     --light-beige: #E5C29F;
     --hard-beige: #D7B899;
+
+    --white-green: #BFE17D;
 }
 
 body {
@@ -50,6 +52,10 @@ body {
 
 .row:nth-child(even) .cell[data-show="true"]:nth-child(odd) {
     background: var(--hard-beige);
+}
+
+.cell_white {
+    background: var(--white-green) !important;
 }
 
 .row {
