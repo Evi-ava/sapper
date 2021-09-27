@@ -1,11 +1,26 @@
 export default class CreatorMatrix {
     constructor(size = 8) {
         this.size = size;
-        this._matrix = this.createRandomMatrix();
     }
 
-    getRandomMatrix() {
-        return this.createRandomMatrix(this.size);
+    getRandomDataMatrix() {
+        const matrix = this.createRandomMatrix(this.size);
+        return {
+            matrix: matrix,
+            amountEmptyField: this._countEmptyFields(matrix),
+        };
+    }
+
+    _countEmptyFields(matrix) {
+        let counter = 0
+
+        for(let i = 0; i < matrix.length; i++) {
+            for(let j = 0; j < matrix.length; j++) {
+                if(matrix[i][j] === 0) counter++;
+            }
+        }
+
+        return counter;
     }
 
     createRandomMatrix(size = 8) {
@@ -40,7 +55,6 @@ export default class CreatorMatrix {
             }
             result.push(row);
         }
-
         return result;
     }
 
@@ -48,6 +62,5 @@ export default class CreatorMatrix {
             // получить случайное число от (min-0.5) до (max+0.5)
             let rand = min - 0.5 + Math.random() * (max - min + 1);
             return Math.round(rand);
-
     }
 }

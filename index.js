@@ -1,7 +1,6 @@
 export default class Table {
 
     element = null;
-    // line = [];
 
     onRightClickCell = event => {
         event.preventDefault();
@@ -17,14 +16,12 @@ export default class Table {
             cell.dataset.flag = 'true';
             cell.innerHTML = `<img src="flag.svg" alt="flag" width="50%" height="50%">`;
         }
-
     }
 
     _removeFlag(cell) {
         cell.dataset.flag = 'false';
         cell.innerHTML = '';
     }
-
 
     onPointerOver = event => {
         const element = event.target.closest('.cell');
@@ -51,7 +48,7 @@ export default class Table {
             return;
         }
 
-        if(cell.dataset.checked === 'true') return;
+        if(cell.dataset.visited === 'true') return;
         cell.classList.remove('cell_white');
 
         const countBombs = this.getCountBombs(this._getNeighbors(cell));
@@ -59,10 +56,12 @@ export default class Table {
             // если количество бомб соседей не 0;
             cell.innerHTML    = `${countBombs}`;
             cell.dataset.show = 'true';
+            this._checkWin();
         }
         else if (countBombs === 0) {
             // если клетка пуста
             this.BFS(cell);
+            this._checkWin();
         }
     }
 
@@ -127,22 +126,13 @@ export default class Table {
         return result;
     }
 
-    constructor(matrix) {
-        this.matrix = matrix;
-
-        // this.matrix = [
-        //     [0, 0, 1, 0, 0, 0, 0, 0 ],
-        //     [0, 0, 1, 0, 0, 0, 0, 0 ],
-        //     [0, 1, 0, 0, 0, 0, 0, 0 ],
-        //     [0, 1, 0, 0, 0, 1, 0, 0 ],
-        //     [0, 0, 0, 0, 0, 1, 0, 0 ],
-        //     [0, 1, 0, 0, 0, 0, 0, 0 ],
-        //     [0, 0, 1, 0, 0, 0, 0, 0 ],
-        //     [1, 0, 1, 0, 0, 0, 0, 0 ],
-        // ];
+    constructor(data = []) {
+        this.matrix = data.matrix;
+        this.amountEmptyField = data.amountEmptyField;
 
         this.render();
         this.initHandlers();
+        this.allCells = this.element.querySelectorAll('.cell');
     }
 
     render() {
@@ -150,6 +140,17 @@ export default class Table {
 
         wrapper.innerHTML = this.template;
         this.element = wrapper.firstElementChild;
+    }
+
+    _checkWin() {
+        let countShowCells = 0;
+        this.allCells.forEach(cell => {
+            cell.dataset.show === 'true' ? countShowCells++ : false;
+        });
+
+        if(countShowCells === this.amountEmptyField) {
+            alert('Вы выиграли');
+        }
     }
 
     get template() {
@@ -181,7 +182,7 @@ export default class Table {
         let counter = 0;
         return row.map(cell => {
             return `<div data-row="${numberRow}" data-column="${counter++}" class="cell" data-show="false" data-mined="${is_mined(cell)}">
-<!--                        ${cell ? 'B' : ''}-->
+
                     </div>`
         }).join('')
     }

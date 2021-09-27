@@ -17,10 +17,11 @@
         import CreatorMatrix from "./CreatorMatrix.js";
         import Table from './index.js';
 
-        const creator = new CreatorMatrix(9);
-        const matrix = creator.getRandomMatrix();
+        const creator = new CreatorMatrix(8);
+        const dataMatrix = creator.getRandomDataMatrix();
+        console.log(dataMatrix)
 
-        const table = new Table(matrix);
+        const table = new Table(dataMatrix);
 
         root.append(table.element)
     </script>
