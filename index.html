@@ -10,13 +10,17 @@
 </head>
 <body>
     <div class="root" id="root" oncontextmenu="return false;">
-
     </div>
 
+
     <script type="module">
+        import CreatorMatrix from "./CreatorMatrix.js";
         import Table from './index.js';
 
-        const table = new Table(8);
+        const creator = new CreatorMatrix(9);
+        const matrix = creator.getRandomMatrix();
+
+        const table = new Table(matrix);
 
         root.append(table.element)
     </script>
