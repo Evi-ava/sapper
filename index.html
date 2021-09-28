@@ -20,15 +20,17 @@
 
 
     <script type="module">
+        import Header from "./Header.js";
         import CreatorMatrix from "./CreatorMatrix.js";
         import Table from './index.js';
 
         const creator = new CreatorMatrix(8);
         const dataMatrix = creator.getRandomDataMatrix();
-        console.log(dataMatrix)
 
+        const header = new Header();
         const table = new Table(dataMatrix);
 
+        root.append(header.element)
         root.append(table.element)
     </script>
 </body>

@@ -19,6 +19,10 @@ body {
     padding: 50px;
 }
 
+.root {
+    display: inline-block;
+}
+
 .cell {
     display: flex;
     justify-content: center;
