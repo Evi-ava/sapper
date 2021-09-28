@@ -5,9 +5,12 @@ export default class CreatorMatrix {
 
     getRandomDataMatrix() {
         const matrix = this.createRandomMatrix(this.size);
+        const amountEmptyField = this._countEmptyFields(matrix);
+        const amountBombs = matrix.length * matrix.length - amountEmptyField;
         return {
             matrix: matrix,
-            amountEmptyField: this._countEmptyFields(matrix),
+            amountEmptyField: amountEmptyField,
+            amountBombs: amountBombs,
         };
     }
 

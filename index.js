@@ -13,14 +13,24 @@ export default class Table {
             this._removeFlag(cell);
         }
         else {
-            cell.dataset.flag = 'true';
-            cell.innerHTML = `<img src="flag.svg" alt="flag" width="50%" height="50%">`;
+            this._addFlag(cell);
         }
+    }
+
+    _addFlag(cell) {
+        cell.dataset.flag = 'true';
+        cell.innerHTML = `<img src="flag.svg" alt="flag" width="50%" height="50%">`;
+
+        // у следующего метода контекстом является header
+        this.handlerFlag('delete');
     }
 
     _removeFlag(cell) {
         cell.dataset.flag = 'false';
         cell.innerHTML = '';
+
+        // у следующего метода контекстом является header
+        this.handlerFlag('add');
     }
 
     onPointerOver = event => {
@@ -126,9 +136,10 @@ export default class Table {
         return result;
     }
 
-    constructor(data = []) {
+    constructor(data = [], handlerFlag = () => {}) {
         this.matrix = data.matrix;
         this.amountEmptyField = data.amountEmptyField;
+        this.handlerFlag = handlerFlag;
 
         this.render();
         this.initHandlers();

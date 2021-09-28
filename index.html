@@ -18,7 +18,6 @@
     <div class="root" id="root" oncontextmenu="return false;">
     </div>
 
-
     <script type="module">
         import Header from "./Header.js";
         import CreatorMatrix from "./CreatorMatrix.js";
@@ -27,11 +26,15 @@
         const creator = new CreatorMatrix(8);
         const dataMatrix = creator.getRandomDataMatrix();
 
-        const header = new Header();
-        const table = new Table(dataMatrix);
+        const header = new Header(dataMatrix.amountBombs);
+        const table = new Table(dataMatrix, header.handlerFlag.bind(header));
 
-        root.append(header.element)
-        root.append(table.element)
+        root.append(header.element);
+        root.append(table.element);
+
+        //передали контекст вызова интервала
+        header.startClock(header);
+
     </script>
 </body>
 </html>

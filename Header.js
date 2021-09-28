@@ -2,8 +2,15 @@ export default class Header {
 
     element = null;
 
-    constructor(amountBombs) {
-        this.amountBombs = amountBombs;
+    flagCounterElement = null;
+    amountFlags = 0;
+
+    clockElement = null;
+    clockCount = 0;
+
+
+    constructor(amountBombs = 0) {
+        this.amountFlags = amountBombs;
 
         this.render();
     }
@@ -14,6 +21,33 @@ export default class Header {
         wrapper.innerHTML = this.template;
 
         this.element = wrapper.firstElementChild;
+        this.flagCounterElement = this.element.querySelector('.flag-count');
+        this.clockElement = this.element.querySelector('.clock-count');
+
+        this.flagCounterElement.innerHTML = this.amountFlags;
+        this.clockElement.innerHTML = this.clockCount;
+
+    }
+
+    handlerFlag(action) {
+        switch (action) {
+            case 'add':
+                this.amountFlags++;
+                this.flagCounterElement.innerHTML = this.amountFlags;
+                break;
+            case 'delete':
+                this.amountFlags--;
+                this.flagCounterElement.innerHTML = this.amountFlags;
+        }
+    }
+
+    clock() {
+        this.clockCount++;
+        this.clockElement.innerHTML = this.clockCount;
+    }
+
+    startClock(context) {
+        setInterval(this.clock.bind(context), 1000);
     }
 
     get template() {
