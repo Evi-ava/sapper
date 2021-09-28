@@ -15,6 +15,7 @@
 }
 
 body {
+    font-family: Montserrat;
     padding: 50px;
 }
 
@@ -65,3 +66,4 @@ body {
 .cell[data-show="true"][data-mined="true"] {
     background: red;
 }
+

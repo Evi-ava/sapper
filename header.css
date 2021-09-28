@@ -1,0 +1,43 @@
+.header {
+    font-family: Montserrat;
+    background: #4A752C;
+    padding: 2px 15px 2px 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 500;
+}
+
+.select {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: Montserrat;
+    font-weight: 500;
+    outline: none;
+}
+
+.flag-block {
+    margin-right: 15px;
+}
+
+.flag-block, .clock-block {
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.flag-block svg, .clock-block svg {
+    margin-right: 8px;
+}
+
+.info-block {
+    display: flex;
+}
+
+.exit {
+    font-size: 37px;
+    color: white;
+    cursor: pointer;
+}
