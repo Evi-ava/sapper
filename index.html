@@ -19,21 +19,13 @@
     </div>
 
     <script type="module">
-        import Header from "./Header.js";
-        import CreatorMatrix from "./CreatorMatrix.js";
-        import Table from './index.js';
 
-        const creator = new CreatorMatrix(8);
-        const dataMatrix = creator.getRandomDataMatrix();
+        import Game from './Game.js'
 
-        const header = new Header(dataMatrix.amountBombs);
-        const table = new Table(dataMatrix, header.handlerFlag.bind(header));
-
-        root.append(header.element);
-        root.append(table.element);
+        const game = new Game(root);
 
         //передали контекст вызова интервала
-        header.startClock(header);
+        // header.startClock(header);
 
     </script>
 </body>

@@ -11,7 +11,6 @@ export default class Header {
 
     constructor(amountBombs = 0) {
         this.amountFlags = amountBombs;
-
         this.render();
     }
 
@@ -27,6 +26,11 @@ export default class Header {
         this.flagCounterElement.innerHTML = this.amountFlags;
         this.clockElement.innerHTML = this.clockCount;
 
+    }
+
+    update(amountBombs = 0) {
+         this.amountFlags = amountBombs;
+         this.flagCounterElement.innerHTML = this.amountFlags;
     }
 
     handlerFlag(action) {

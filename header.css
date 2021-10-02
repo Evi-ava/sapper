@@ -28,11 +28,16 @@
     align-items: center;
 }
 
+.flag-block p {
+    width: 15px;
+}
+
 .flag-block svg, .clock-block svg {
     margin-right: 8px;
 }
 
 .info-block {
+    width: 106px;
     display: flex;
 }
 

@@ -153,6 +153,12 @@ export default class Table {
         this.element = wrapper.firstElementChild;
     }
 
+    update(data = []) {
+        this.matrix = data.matrix;
+        this.amountEmptyField = data.amountEmptyField;
+        this.element.innerHTML = this.getRows(this.matrix);
+    }
+
     _checkWin() {
         let countShowCells = 0;
         this.allCells.forEach(cell => {
