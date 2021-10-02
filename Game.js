@@ -3,29 +3,68 @@ import CreatorMatrix from "./CreatorMatrix.js";
 import Table from './index.js';
 
 export default class Game {
-    constructor(root = document.body) {
+
+    changeLevel = event => {
+
+    }
+
+    constructor(root = document.body, levelGame = 'simple') {
         this.root = root;
-        this.creator = new CreatorMatrix(8);
+        this.levelGame = levelGame;
+
+        this.creator = new CreatorMatrix(this.getLevelSize(levelGame));
         this.dataMatrix = this.creator.getRandomDataMatrix();
 
         this.header = new Header(this.dataMatrix.amountBombs);
         this.table = new Table(this.dataMatrix, this.header.handlerFlag.bind(this.header));
 
+        this.selectLevelElement = this.header.element.querySelector('.select');
 
         this.render();
-        debugger;
+        this.initHandlers();
     }
 
-    restart() {
-        this.creator = new CreatorMatrix(8);
+    render() {
+        this.root.append(this.header.element);
+        this.root.append(this.table.element);
+    }
+
+    restart(levelGame) {
+        const sizeMatrix = this.getLevelSize(levelGame);
+
+        this.creator = new CreatorMatrix(sizeMatrix);
         this.dataMatrix = this.creator.getRandomDataMatrix();
 
         this.header.update(this.dataMatrix.amountBombs);
         this.table.update(this.dataMatrix);
     }
 
-    render() {
-        this.root.append(this.header.element);
-        this.root.append(this.table.element);
+    getLevelSize(levelGame = 'simple') {
+
+        const level = {
+            'simple': 8,
+            'middle': 10,
+            'hard': 12,
+        }
+
+        return level[levelGame];
+    }
+
+    initHandlers() {
+        this.header.element.addEventListener('click', event => {
+            const element = event.target.closest('.exit');
+
+            if(element) this.restart(this.levelGame);
+        });
+
+        this.header.element.addEventListener('click', event => {
+            const element = event.target.closest('.select');
+            if(element === null) return;
+
+            if(element.value !== this.levelGame) {
+                this.restart(element.value);
+                this.levelGame = element.value;
+            }
+        });
     }
 }

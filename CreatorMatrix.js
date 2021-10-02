@@ -28,7 +28,9 @@ export default class CreatorMatrix {
 
     createRandomMatrix(size = 8) {
         const amountCells = size * size;
-        let amountBombs = Math.round(amountCells * 0.2);
+
+        //было 20
+        let amountBombs = Math.round(amountCells * 0.15);
 
         const zeroMatrix = this._createZeroMatrix(size);
 
