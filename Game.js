@@ -5,11 +5,19 @@ import Table from './index.js';
 export default class Game {
 
     changeLevel = event => {
+        const element = event.target.closest('.select');
+        if(element === null) return;
 
+        if(element.value !== this.levelGame) {
+            this.restart(element.value);
+            this.levelGame = element.value;
+            this.root.dataset.level = element.value;
+        }
     }
 
     constructor(root = document.body, levelGame = 'simple') {
         this.root = root;
+        this.root.dataset.level = levelGame;
         this.levelGame = levelGame;
 
         this.creator = new CreatorMatrix(this.getLevelSize(levelGame));
@@ -17,8 +25,6 @@ export default class Game {
 
         this.header = new Header(this.dataMatrix.amountBombs);
         this.table = new Table(this.dataMatrix, this.header.handlerFlag.bind(this.header));
-
-        this.selectLevelElement = this.header.element.querySelector('.select');
 
         this.render();
         this.initHandlers();
@@ -42,9 +48,9 @@ export default class Game {
     getLevelSize(levelGame = 'simple') {
 
         const level = {
-            'simple': 8,
-            'middle': 10,
-            'hard': 12,
+            'simple': 10,
+            'middle': 16,
+            'hard': 19,
         }
 
         return level[levelGame];
@@ -57,14 +63,6 @@ export default class Game {
             if(element) this.restart(this.levelGame);
         });
 
-        this.header.element.addEventListener('click', event => {
-            const element = event.target.closest('.select');
-            if(element === null) return;
-
-            if(element.value !== this.levelGame) {
-                this.restart(element.value);
-                this.levelGame = element.value;
-            }
-        });
+        this.header.element.addEventListener('click', this.changeLevel);
     }
 }

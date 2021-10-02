@@ -66,6 +66,7 @@ export default class Table {
             // если количество бомб соседей не 0;
             cell.innerHTML    = `${countBombs}`;
             cell.dataset.show = 'true';
+            cell.dataset.around = countBombs  + '';
             this._checkWin();
         }
         else if (countBombs === 0) {
@@ -156,7 +157,9 @@ export default class Table {
     update(data = []) {
         this.matrix = data.matrix;
         this.amountEmptyField = data.amountEmptyField;
+
         this.element.innerHTML = this.getRows(this.matrix);
+        this.allCells = this.element.querySelectorAll('.cell');
     }
 
     _checkWin() {

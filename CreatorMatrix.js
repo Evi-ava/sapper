@@ -30,7 +30,7 @@ export default class CreatorMatrix {
         const amountCells = size * size;
 
         //было 20
-        let amountBombs = Math.round(amountCells * 0.15);
+        let amountBombs = Math.round(amountCells * 0.11);
 
         const zeroMatrix = this._createZeroMatrix(size);
 

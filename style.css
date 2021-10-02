@@ -16,7 +16,7 @@
 
 body {
     font-family: Montserrat;
-    padding: 50px;
+    padding: 10px;
 }
 
 .root {
@@ -24,6 +24,8 @@ body {
 }
 
 .cell {
+    font-weight: 500;
+    font-size: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,7 +69,48 @@ body {
     display: flex;
 }
 
-.cell[data-show="true"][data-mined="true"] {
-    background: red;
+.root_bombs .cell[data-mined="true"] {
+    position: relative;
+    background: #ED44B5 !important;
 }
 
+.root_bombs .cell[data-mined="true"]::before {
+    content: '';
+    position: absolute;
+    width: 40%;
+    height: 40%;
+    border-radius: 40px;
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.cell[data-around="1"] {
+    color: #1976D2;
+}
+
+.cell[data-around="2"] {
+    color: #388E3C;
+}
+
+.cell[data-around="3"] {
+    color: #D32F2F;
+}
+
+.cell[data-around="4"] {
+    color: #7B1FA2;
+}
+
+.root[data-level="simple"] .cell {
+    width: 40px;
+    height: 40px;
+}
+
+.root[data-level="middle"] .cell {
+    width: 25px;
+    height: 25px;
+}
+
+.root[data-level="hard"] .cell {
+    width: 24px;
+    height: 24px;
+}
