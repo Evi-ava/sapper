@@ -33,6 +33,7 @@ export default class Game {
     render() {
         this.root.append(this.header.element);
         this.root.append(this.table.element);
+        this.header.startClock(this.header);
     }
 
     restart(levelGame) {

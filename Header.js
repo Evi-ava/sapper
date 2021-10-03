@@ -30,6 +30,8 @@ export default class Header {
 
     update(amountBombs = 0) {
          this.amountFlags = amountBombs;
+         this.clockCount = 0;
+         this.clockElement.innerHTML = 0;
          this.flagCounterElement.innerHTML = this.amountFlags;
     }
 
