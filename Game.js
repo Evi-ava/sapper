@@ -126,7 +126,11 @@ export default class Game {
     }
 
     restart(levelGame) {
+        this.header.removeClock();
+
+        this.infoGame.start = false;
         this.infoGame.end = false;
+
         this.root.classList.remove('root_bombs');
         const sizeMatrix = this.getLevelSize(levelGame);
 

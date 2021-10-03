@@ -37,7 +37,7 @@ export default class Header {
     }
 
     lose() {
-        clearInterval(this.intervalId);
+        this.removeClock();
     }
 
     handlerFlag(action) {
@@ -59,6 +59,10 @@ export default class Header {
 
     startClock(context) {
         this.intervalId = setInterval(this.clock.bind(context), 1000);
+    }
+
+    removeClock() {
+        clearInterval(this.intervalId);
     }
 
     get template() {

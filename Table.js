@@ -129,7 +129,6 @@ export default class Table {
     initHandlers() {
         this.element.addEventListener('pointerover', this.onPointerOver);
         this.element.addEventListener('pointerout', this.onPointerOut)
-
     }
 
     getRows(matrix) {
