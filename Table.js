@@ -18,38 +18,6 @@ export default class Table {
         }
     }
 
-    BFS(cell) {
-        const line = [];
-        line.push(cell);
-        cell.dataset.visited = 'true';
-        cell.dataset.show = 'true';
-
-        while(line.length !== 0) {
-            const v = line.shift();
-            const neighbors = this._getNeighbors(v);
-
-            neighbors.forEach(elem => {
-
-                if(elem.dataset.visited === 'true') return;
-
-                elem.dataset.around = this.getCountBombs(this._getNeighbors(elem)) + '';
-                if(+elem.dataset.around !== 0) elem.innerHTML = elem.dataset.around;
-                elem.dataset.show = 'true';
-
-                if(elem.dataset.flag === 'true') this._removeFlag(elem);
-            });
-
-            const filteredNeighbors = neighbors.filter(elem => {
-               return +elem.dataset.around === 0 && elem.dataset.visited !== 'true';
-            });
-
-            line.push(...filteredNeighbors);
-            neighbors.forEach(elem => {
-                elem.dataset.visited = 'true';
-            })
-        }
-    }
-
     _getNeighbors(cell) {
         const neighbors = [];
 

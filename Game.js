@@ -50,7 +50,7 @@ export default class Game {
         }
         else if (countBombs === 0) {
             // если клетка пуста
-            this.table.BFS(cell);
+            this.BFS(cell);
             this.table._checkWin();
         }
     }
@@ -113,12 +113,50 @@ export default class Game {
         this.infoGame.start = true;
     }
 
+    BFS(cell) {
+        const line = [];
+        line.push(cell);
+        cell.dataset.visited = 'true';
+        cell.dataset.show = 'true';
+
+        while(line.length !== 0) {
+            const v = line.shift();
+            const neighbors = this.table._getNeighbors(v);
+
+            neighbors.forEach(elem => {
+
+                if(elem.dataset.visited === 'true') return;
+
+                elem.dataset.around = this.table.getCountBombs(this.table._getNeighbors(elem)) + '';
+                if(+elem.dataset.around !== 0) elem.innerHTML = elem.dataset.around;
+                elem.dataset.show = 'true';
+
+                if(elem.dataset.flag === 'true') this._removeFlag(elem);
+            });
+
+            const filteredNeighbors = neighbors.filter(elem => {
+                return +elem.dataset.around === 0 && elem.dataset.visited !== 'true';
+            });
+
+            line.push(...filteredNeighbors);
+            neighbors.forEach(elem => {
+                elem.dataset.visited = 'true';
+            })
+        }
+    }
+
     subscribe(...args) {
         this.observers.push(...args);
     }
 
     losing() {
         this.infoGame.end = true;
+
+        const flagCells = this.table.element.querySelectorAll('[data-flag="true"]');
+
+        for(const cell of flagCells) {
+            cell.innerHTML = '';
+        }
 
         this.observers.forEach(observer => {
             observer.lose();
