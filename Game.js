@@ -100,7 +100,7 @@ export default class Game {
 
         this.render();
         this.initHandlers();
-        this.subscribe(this.header, this.table)
+        this.subscribe(this.header, this.table);
     }
 
     render() {
