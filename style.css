@@ -20,13 +20,30 @@
     fill: white;
 }
 
+html {
+    width: 100%;
+    height: 100%;
+}
+
 body {
+    width: 100%;
+    height: 100%;
     font-family: Montserrat;
-    padding: 10px;
 }
 
 .root {
+    margin: 0 auto;
     display: inline-block;
+}
+
+.application {
+    padding: 5px;
+    background:rgba(0, 0, 0, 0.9);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cell {
