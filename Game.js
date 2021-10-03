@@ -1,8 +1,15 @@
 import Header from "./Header.js";
 import CreatorMatrix from "./CreatorMatrix.js";
-import Table from './index.js';
+import Table from './Table.js';
 
 export default class Game {
+
+    observers = [];
+
+    infoGame = {
+        start: false,
+        end: false,
+    }
 
     changeLevel = event => {
         const element = event.target.closest('.select');
@@ -15,6 +22,71 @@ export default class Game {
         }
     }
 
+    onClickCell = event => {
+
+        if(this.infoGame.end) return;
+        if(this.infoGame.start === false) this.startGame();
+
+        const cell = event.target.closest('[data-column]');
+
+        if(!cell) return;
+        if(cell.dataset.flag === 'true') return;
+        if(cell.dataset.mined === 'true') {
+            alert('вы проиграли');
+            this.losing();
+            return;
+        }
+
+        if(cell.dataset.visited === 'true') return;
+        cell.classList.remove('cell_white');
+
+        const countBombs = this.table.getCountBombs(this.table._getNeighbors(cell));
+        if(countBombs) {
+            // если количество бомб соседей не 0;
+            cell.innerHTML    = `${countBombs}`;
+            cell.dataset.show = 'true';
+            cell.dataset.around = countBombs  + '';
+            this.table._checkWin();
+        }
+        else if (countBombs === 0) {
+            // если клетка пуста
+            this.table.BFS(cell);
+            this.table._checkWin();
+        }
+    }
+
+    onRightClickCell = event => {
+        event.preventDefault();
+        if(this.infoGame.end) return;
+        if(event.which !== 3) return;
+
+        const cell = event.target.closest('.cell');
+        if(cell === null || cell.dataset.show === 'true') return;
+
+        if(cell.dataset.flag === 'true') {
+            this._removeFlag(cell);
+        }
+        else {
+            this._addFlag(cell);
+        }
+    }
+
+    _addFlag(cell) {
+        cell.dataset.flag = 'true';
+        cell.innerHTML = `<img src="flag.svg" alt="flag" width="50%" height="50%">`;
+
+        // у следующего метода контекстом является header
+        this.header.handlerFlag('delete');
+    }
+
+    _removeFlag(cell) {
+        cell.dataset.flag = 'false';
+        cell.innerHTML = '';
+
+        // у следующего метода контекстом является header
+        this.header.handlerFlag('add');
+    }
+
     constructor(root = document.body, levelGame = 'simple') {
         this.root = root;
         this.root.dataset.level = levelGame;
@@ -24,19 +96,38 @@ export default class Game {
         this.dataMatrix = this.creator.getRandomDataMatrix();
 
         this.header = new Header(this.dataMatrix.amountBombs);
-        this.table = new Table(this.dataMatrix, this.header.handlerFlag.bind(this.header));
+        this.table = new Table(this.dataMatrix);
 
         this.render();
         this.initHandlers();
+        this.subscribe(this.header, this.table)
     }
 
     render() {
         this.root.append(this.header.element);
         this.root.append(this.table.element);
+    }
+
+    startGame() {
         this.header.startClock(this.header);
+        this.infoGame.start = true;
+    }
+
+    subscribe(...args) {
+        this.observers.push(...args);
+    }
+
+    losing() {
+        this.infoGame.end = true;
+
+        this.observers.forEach(observer => {
+            observer.lose();
+        });
     }
 
     restart(levelGame) {
+        this.infoGame.end = false;
+        this.root.classList.remove('root_bombs');
         const sizeMatrix = this.getLevelSize(levelGame);
 
         this.creator = new CreatorMatrix(sizeMatrix);
@@ -60,10 +151,11 @@ export default class Game {
     initHandlers() {
         this.header.element.addEventListener('click', event => {
             const element = event.target.closest('.exit');
-
             if(element) this.restart(this.levelGame);
         });
 
+        this.table.element.addEventListener('click', this.onClickCell);
         this.header.element.addEventListener('click', this.changeLevel);
+        this.table.element.addEventListener('pointerdown', this.onRightClickCell);
     }
 }

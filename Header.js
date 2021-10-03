@@ -8,6 +8,7 @@ export default class Header {
     clockElement = null;
     clockCount = 0;
 
+    intervalId = null;
 
     constructor(amountBombs = 0) {
         this.amountFlags = amountBombs;
@@ -35,6 +36,10 @@ export default class Header {
          this.flagCounterElement.innerHTML = this.amountFlags;
     }
 
+    lose() {
+        clearInterval(this.intervalId);
+    }
+
     handlerFlag(action) {
         switch (action) {
             case 'add':
@@ -53,7 +58,7 @@ export default class Header {
     }
 
     startClock(context) {
-        setInterval(this.clock.bind(context), 1000);
+        this.intervalId = setInterval(this.clock.bind(context), 1000);
     }
 
     get template() {

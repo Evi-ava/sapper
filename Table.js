@@ -2,37 +2,6 @@ export default class Table {
 
     element = null;
 
-    onRightClickCell = event => {
-        event.preventDefault();
-        if(event.which !== 3) return;
-
-        const cell = event.target.closest('.cell');
-        if(cell === null || cell.dataset.show === 'true') return;
-
-        if(cell.dataset.flag === 'true') {
-            this._removeFlag(cell);
-        }
-        else {
-            this._addFlag(cell);
-        }
-    }
-
-    _addFlag(cell) {
-        cell.dataset.flag = 'true';
-        cell.innerHTML = `<img src="flag.svg" alt="flag" width="50%" height="50%">`;
-
-        // у следующего метода контекстом является header
-        this.handlerFlag('delete');
-    }
-
-    _removeFlag(cell) {
-        cell.dataset.flag = 'false';
-        cell.innerHTML = '';
-
-        // у следующего метода контекстом является header
-        this.handlerFlag('add');
-    }
-
     onPointerOver = event => {
         const element = event.target.closest('.cell');
 
@@ -49,33 +18,6 @@ export default class Table {
         }
     }
 
-    onClickCell = event => {
-        const cell = event.target.closest('[data-column]');
-        if(!cell) return;
-        if(cell.dataset.flag === 'true') return;
-        if(cell.dataset.mined === 'true') {
-            alert('вы проиграли');
-            return;
-        }
-
-        if(cell.dataset.visited === 'true') return;
-        cell.classList.remove('cell_white');
-
-        const countBombs = this.getCountBombs(this._getNeighbors(cell));
-        if(countBombs) {
-            // если количество бомб соседей не 0;
-            cell.innerHTML    = `${countBombs}`;
-            cell.dataset.show = 'true';
-            cell.dataset.around = countBombs  + '';
-            this._checkWin();
-        }
-        else if (countBombs === 0) {
-            // если клетка пуста
-            this.BFS(cell);
-            this._checkWin();
-        }
-    }
-
     BFS(cell) {
         const line = [];
         line.push(cell);
@@ -89,7 +31,6 @@ export default class Table {
             neighbors.forEach(elem => {
 
                 if(elem.dataset.visited === 'true') return;
-                // elem.dataset.visited = 'true';
 
                 elem.dataset.around = this.getCountBombs(this._getNeighbors(elem)) + '';
                 if(+elem.dataset.around !== 0) elem.innerHTML = elem.dataset.around;
@@ -137,10 +78,9 @@ export default class Table {
         return result;
     }
 
-    constructor(data = [], handlerFlag = () => {}) {
+    constructor(data = []) {
         this.matrix = data.matrix;
         this.amountEmptyField = data.amountEmptyField;
-        this.handlerFlag = handlerFlag;
 
         this.render();
         this.initHandlers();
@@ -173,6 +113,13 @@ export default class Table {
         }
     }
 
+    lose() {
+        const root = this.element.closest('.root');
+        if(root) {
+            root.classList.add('root_bombs');
+        }
+    }
+
     get template() {
         return `<div class="table">
                     ${this.getRows(this.matrix)}
@@ -180,10 +127,9 @@ export default class Table {
     }
 
     initHandlers() {
-        this.element.addEventListener('click', this.onClickCell);
         this.element.addEventListener('pointerover', this.onPointerOver);
         this.element.addEventListener('pointerout', this.onPointerOut)
-        this.element.addEventListener('pointerdown', this.onRightClickCell);
+
     }
 
     getRows(matrix) {
