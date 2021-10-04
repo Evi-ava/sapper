@@ -23,13 +23,13 @@ export default class Game {
     }
 
     onClickCell = event => {
-
         if(this.infoGame.end) return;
-        if(this.infoGame.start === false) this.startGame();
 
         const cell = event.target.closest('[data-column]');
-
         if(!cell) return;
+
+        if(this.infoGame.start === false) this.startGame();
+
         if(cell.dataset.flag === 'true') return;
         if(cell.dataset.mined === 'true') {
             alert('вы проиграли');
@@ -151,6 +151,7 @@ export default class Game {
 
     losing() {
         this.infoGame.end = true;
+        this.table.element.dataset.blocked = 'true';
 
         const flagCells = this.table.element.querySelectorAll('[data-flag="true"]');
 
@@ -165,6 +166,7 @@ export default class Game {
 
     restart(levelGame) {
         this.header.removeClock();
+        this.table.element.dataset.blocked = 'false';
 
         this.infoGame.start = false;
         this.infoGame.end = false;

@@ -36,6 +36,22 @@ body {
     display: inline-block;
 }
 
+.table {
+    position: relative;
+}
+
+.table[data-blocked="true"]::after {
+    top: 0;
+    left: 0;
+    position: absolute;
+    content: '';
+    z-index: 10;
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.1);
+}
+
 .application {
     padding: 5px;
     background: rgba(0, 0, 0, 0.9) url('background.svg') center center /cover;
@@ -82,6 +98,10 @@ body {
 
 .row:nth-child(even) .cell[data-show="true"]:nth-child(odd) {
     background: var(--hard-beige);
+}
+
+.cell[data-show="true"] {
+    cursor: default;
 }
 
 .cell_white {
