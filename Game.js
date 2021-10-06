@@ -118,7 +118,6 @@ export default class Game {
     }
 
     firstClicked(cell) {
-        console.log('заход в функцию первого клика')
         const {row, column} = cell.dataset;
         const dataMatrix = this.creator.getRandomDataMatrix({x: +column, y: +row});
 
@@ -191,12 +190,9 @@ export default class Game {
         this.root.classList.remove('root_bombs');
         const sizeMatrix = this.getLevelSize(levelGame);
 
-        console.log(sizeMatrix);
-
         this.creator = new CreatorMatrix(sizeMatrix);
         this.dataMatrix = this.creator.createZeroMatrix(sizeMatrix);
 
-        console.log(this.dataMatrix)
 
         this.header.update(this.creator.getCountBombsOnField(sizeMatrix));
         this.table.update(this.dataMatrix);
