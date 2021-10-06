@@ -96,11 +96,8 @@ export default class Game {
         this.root.dataset.level = levelGame;
         this.levelGame = levelGame;
 
-        this.root.classList.add('root_bombs')
-
         this.creator = new CreatorMatrix(this.getLevelSize(levelGame));
         this.dataMatrix = this.creator.createZeroMatrix(this.getLevelSize(levelGame));
-
 
         this.header = new Header(this.creator.getCountBombsOnField(this.getLevelSize(this.levelGame)));
         this.table = new Table(this.dataMatrix);
