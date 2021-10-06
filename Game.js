@@ -50,12 +50,12 @@ export default class Game {
             cell.innerHTML    = `${countBombs}`;
             cell.dataset.show = 'true';
             cell.dataset.around = countBombs  + '';
-            this.table._checkWin();
+            this._checkWin();
         }
         else if (countBombs === 0) {
             // если клетка пуста
             this.BFS(cell);
-            this.table._checkWin();
+            this._checkWin();
         }
     }
 
@@ -95,6 +95,8 @@ export default class Game {
         this.root = root;
         this.root.dataset.level = levelGame;
         this.levelGame = levelGame;
+
+        this.root.classList.add('root_bombs')
 
         this.creator = new CreatorMatrix(this.getLevelSize(levelGame));
         this.dataMatrix = this.creator.createZeroMatrix(this.getLevelSize(levelGame));
@@ -212,6 +214,20 @@ export default class Game {
         }
 
         return level[levelGame];
+    }
+
+    _checkWin() {
+        let countShowCells = 0;
+        this.table.allCells.forEach(cell => {
+            cell.dataset.show === 'true' ? countShowCells++ : false;
+        });
+
+        if(countShowCells === this.table.amountEmptyField) {
+            this.infoGame.end = true;
+            this.header.removeClock();
+            this.table.element.dataset.blocked = 'true';
+            alert('Вы выиграли');
+        }
     }
 
     initHandlers() {

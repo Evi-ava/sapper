@@ -70,17 +70,6 @@ export default class Table {
         this.allCells = this.element.querySelectorAll('.cell');
     }
 
-    _checkWin() {
-        let countShowCells = 0;
-        this.allCells.forEach(cell => {
-            cell.dataset.show === 'true' ? countShowCells++ : false;
-        });
-
-        if(countShowCells === this.amountEmptyField) {
-            alert('Вы выиграли');
-        }
-    }
-
     lose() {
         const root = this.element.closest('.root');
         if(root) {
