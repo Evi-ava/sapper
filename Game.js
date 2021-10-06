@@ -192,10 +192,14 @@ export default class Game {
         this.root.classList.remove('root_bombs');
         const sizeMatrix = this.getLevelSize(levelGame);
 
-        this.creator = new CreatorMatrix(sizeMatrix);
-        this.dataMatrix = this.creator.createZeroMatrix(this.getLevelSize(this.levelGame));
+        console.log(sizeMatrix);
 
-        this.header.update(this.creator.getCountBombsOnField(this.getLevelSize(this.levelGame)));
+        this.creator = new CreatorMatrix(sizeMatrix);
+        this.dataMatrix = this.creator.createZeroMatrix(sizeMatrix);
+
+        console.log(this.dataMatrix)
+
+        this.header.update(this.creator.getCountBombsOnField(sizeMatrix));
         this.table.update(this.dataMatrix);
     }
 
