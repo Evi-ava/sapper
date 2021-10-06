@@ -22,13 +22,17 @@ export default class Game {
         }
     }
 
+
     onClickCell = event => {
         if(this.infoGame.end) return;
 
         const cell = event.target.closest('[data-column]');
         if(!cell) return;
 
-        if(this.infoGame.start === false) this.startGame();
+        if(this.infoGame.start === false) {
+            this.startGame();
+            this.firstClicked(cell);
+        };
 
         if(cell.dataset.flag === 'true') return;
         if(cell.dataset.mined === 'true') {
@@ -93,9 +97,10 @@ export default class Game {
         this.levelGame = levelGame;
 
         this.creator = new CreatorMatrix(this.getLevelSize(levelGame));
-        this.dataMatrix = this.creator.getRandomDataMatrix();
+        this.dataMatrix = this.creator.createZeroMatrix(this.getLevelSize(levelGame));
 
-        this.header = new Header(this.dataMatrix.amountBombs);
+
+        this.header = new Header(this.creator.getCountBombsOnField(this.getLevelSize(this.levelGame)));
         this.table = new Table(this.dataMatrix);
 
         this.render();
@@ -111,6 +116,19 @@ export default class Game {
     startGame() {
         this.header.startClock(this.header);
         this.infoGame.start = true;
+    }
+
+    firstClicked(cell) {
+        console.log('заход в функцию первого клика')
+        const {row, column} = cell.dataset;
+        const dataMatrix = this.creator.getRandomDataMatrix({x: +column, y: +row});
+
+
+        this.table.update(dataMatrix);
+        const newGenerateCell = this.table.element.querySelector(`.cell[data-column="${column}"][data-row="${row}"]`);
+
+        const eventClick = new Event('click', {bubbles: true});
+        newGenerateCell.dispatchEvent(eventClick);
     }
 
     BFS(cell) {
@@ -175,9 +193,9 @@ export default class Game {
         const sizeMatrix = this.getLevelSize(levelGame);
 
         this.creator = new CreatorMatrix(sizeMatrix);
-        this.dataMatrix = this.creator.getRandomDataMatrix();
+        this.dataMatrix = this.creator.createZeroMatrix(this.getLevelSize(this.levelGame));
 
-        this.header.update(this.dataMatrix.amountBombs);
+        this.header.update(this.creator.getCountBombsOnField(this.getLevelSize(this.levelGame)));
         this.table.update(this.dataMatrix);
     }
 

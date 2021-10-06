@@ -3,8 +3,8 @@ export default class CreatorMatrix {
         this.size = size;
     }
 
-    getRandomDataMatrix() {
-        const matrix = this.createRandomMatrix(this.size);
+    getRandomDataMatrix(clear = {}) {
+        const matrix = this.createRandomMatrix(this.size, clear);
         const amountEmptyField = this._countEmptyFields(matrix);
         const amountBombs = matrix.length * matrix.length - amountEmptyField;
         return {
@@ -26,13 +26,12 @@ export default class CreatorMatrix {
         return counter;
     }
 
-    createRandomMatrix(size = 8) {
+    createRandomMatrix(size = 8, clearCoords = {x: null, y: null}) {
         const amountCells = size * size;
-
         //было 20
         let amountBombs = Math.round(amountCells * 0.11);
 
-        const zeroMatrix = this._createZeroMatrix(size);
+        const {matrix} = this.createZeroMatrix(size);
 
         for(let i = 0; i < amountBombs; i++) {
             const coords = {
@@ -40,17 +39,21 @@ export default class CreatorMatrix {
                 y: this._randomInteger(0, size-1)
             }
 
-            if(zeroMatrix[coords.x][coords.y] === 0) {
-                zeroMatrix[coords.x][coords.y] = 1;
+            if( (matrix[coords.y][coords.x] === 0) && (coords.x !== clearCoords.x && coords.y !== clearCoords.y) ) {
+                matrix[coords.y][coords.x] = 1;
             }
             else {
                 amountBombs++;
             }
         }
-        return zeroMatrix;
+        return matrix;
     }
 
-    _createZeroMatrix(size = 0) {
+    getCountBombsOnField(size) {
+       return Math.round(size * size * 0.11);
+    }
+
+    createZeroMatrix(size = 0) {
         const result = [];
 
         for(let i = 0; i < size; i++) {
@@ -60,7 +63,7 @@ export default class CreatorMatrix {
             }
             result.push(row);
         }
-        return result;
+        return {matrix: result};
     }
 
     _randomInteger(min, max) {
