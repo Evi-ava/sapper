@@ -1,6 +1,7 @@
-import Header from "./Header.js";
-import CreatorMatrix from "./CreatorMatrix.js";
-import Table from './Table.js';
+import Header from "./components/Header.js";
+import CreatorMatrix from "./components/CreatorMatrix.js";
+import Table from './components/Table.js';
+import PopUp from "./components/PopUp.js";
 
 export default class Game {
 
@@ -36,7 +37,6 @@ export default class Game {
 
         if(cell.dataset.flag === 'true') return;
         if(cell.dataset.mined === 'true') {
-            alert('вы проиграли');
             this.losing();
             return;
         }
@@ -77,7 +77,7 @@ export default class Game {
 
     _addFlag(cell) {
         cell.dataset.flag = 'true';
-        cell.innerHTML = `<img src="flag.svg" alt="flag" width="50%" height="50%">`;
+        cell.innerHTML = `<img src="svg/flag.svg" alt="flag" width="50%" height="50%">`;
 
         // у следующего метода контекстом является header
         this.header.handlerFlag('delete');
@@ -101,6 +101,7 @@ export default class Game {
 
         this.header = new Header(this.creator.getCountBombsOnField(this.getLevelSize(this.levelGame)));
         this.table = new Table(this.dataMatrix);
+        this.popup = new PopUp();
 
         this.render();
         this.initHandlers();
@@ -120,7 +121,6 @@ export default class Game {
     firstClicked(cell) {
         const {row, column} = cell.dataset;
         const dataMatrix = this.creator.getRandomDataMatrix({x: +column, y: +row});
-
 
         this.table.update(dataMatrix);
         const newGenerateCell = this.table.element.querySelector(`.cell[data-column="${column}"][data-row="${row}"]`);
@@ -178,9 +178,13 @@ export default class Game {
         this.observers.forEach(observer => {
             observer.lose();
         });
+
+        const popup = this.popup.getPopUp(this.header.clockCount, '000')
+        document.body.append(popup);
     }
 
     restart(levelGame) {
+        this.popup.remove();
         this.header.removeClock();
         this.table.element.dataset.blocked = 'false';
 
@@ -224,8 +228,8 @@ export default class Game {
     }
 
     initHandlers() {
-        this.header.element.addEventListener('click', event => {
-            const element = event.target.closest('.exit');
+        document.addEventListener('click', event => {
+            const element = event.target.closest('[data-restart="true"]');
             if(element) this.restart(this.levelGame);
         });
 

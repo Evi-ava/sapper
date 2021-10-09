@@ -108,7 +108,7 @@ export default class Header {
                     </div>
                 </div>
 
-                <div class="exit">
+                <div class="exit" data-restart="true">
                     <svg version="1.1" id="reload" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 \t width="102.455px" height="102.455px" viewBox="0 0 102.455 102.455" style="enable-background:new 0 0 102.455 102.455;"
 \t xml:space="preserve">

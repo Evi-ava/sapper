@@ -54,7 +54,7 @@ body {
 
 .application {
     padding: 5px;
-    background: rgba(0, 0, 0, 0.9) url('background.svg') center center /cover;
+    background: rgba(0, 0, 0, 0.9) url('../svg/background.svg') center center /cover;
     height: 100%;
     width: 100%;
     display: flex;
