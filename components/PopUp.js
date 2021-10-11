@@ -22,10 +22,23 @@ export default class PopUp {
         bestTimeElement.innerHTML   = bestTime;
         buttonTextElement.innerHTML = buttonText;
 
-        console.log(timeElem)
-        console.log(bestTimeElement)
-
         return this.element;
+    }
+
+    show(time = '___', bestTime = '___') {
+        const promise = new Promise((resolve, reject) => {
+            setTimeout(() => resolve('done'), 2000);
+        }).then(result => {
+            const popup = this.getPopUp(time, bestTime);
+            const message = popup.querySelector('.message');
+            message.classList.remove('show');
+
+            document.body.append(popup);
+
+            setTimeout(()=> {
+                message.classList.add('show')
+            }, 0);
+        });
     }
 
     getTemplate() {

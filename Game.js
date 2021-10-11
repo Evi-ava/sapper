@@ -10,6 +10,11 @@ export default class Game {
     infoGame = {
         start: false,
         end: false,
+        bestTime: {
+            simple: 0,
+            middle: 0,
+            hard: 0,
+        }
     }
 
     changeLevel = event => {
@@ -22,7 +27,6 @@ export default class Game {
             this.root.dataset.level = element.value;
         }
     }
-
 
     onClickCell = event => {
         if(this.infoGame.end) return;
@@ -166,8 +170,7 @@ export default class Game {
     }
 
     losing() {
-        this.infoGame.end = true;
-        this.table.element.dataset.blocked = 'true';
+        this.blocked();
 
         const flagCells = this.table.element.querySelectorAll('[data-flag="true"]');
 
@@ -179,13 +182,14 @@ export default class Game {
             observer.lose();
         });
 
-        const popup = this.popup.getPopUp(this.header.clockCount, '000')
-        document.body.append(popup);
+        this.popup.show('___', this.infoGame.bestTime[this.levelGame]);
     }
 
     restart(levelGame) {
         this.popup.remove();
         this.header.removeClock();
+
+        this.header.element.dataset.blocked = 'false';
         this.table.element.dataset.blocked = 'false';
 
         this.infoGame.start = false;
@@ -196,7 +200,6 @@ export default class Game {
 
         this.creator = new CreatorMatrix(sizeMatrix);
         this.dataMatrix = this.creator.createZeroMatrix(sizeMatrix);
-
 
         this.header.update(this.creator.getCountBombsOnField(sizeMatrix));
         this.table.update(this.dataMatrix);
@@ -220,11 +223,28 @@ export default class Game {
         });
 
         if(countShowCells === this.table.amountEmptyField) {
-            this.infoGame.end = true;
-            this.header.removeClock();
-            this.table.element.dataset.blocked = 'true';
-            alert('Вы выиграли');
+            this.win();
         }
+    }
+
+    win() {
+        this.blocked();
+
+        if(this.infoGame.bestTime[this.levelGame] === 0) {
+            this.infoGame.bestTime[this.levelGame] = this.header.clockCount;
+        }
+        else if (this.infoGame.bestTime[this.levelGame] > this.header.clockCount) {
+            this.infoGame.bestTime[this.levelGame] = this.header.clockCount;
+        }
+
+        this.popup.show(this.header.clockCount, this.infoGame.bestTime[this.levelGame]);
+    }
+
+    blocked() {
+        this.infoGame.end = true;
+        this.header.removeClock();
+        this.header.element.dataset.blocked = 'true';
+        this.table.element.dataset.blocked = 'true';
     }
 
     initHandlers() {

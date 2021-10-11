@@ -1,8 +1,3 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
 html, body {
     width: 100%;
@@ -23,8 +18,14 @@ html, body {
 }
 
 .message {
+    opacity: 0;
+    transition: all 0.5s ease;
     width: 300px;
     font-family: Montserrat;
+}
+
+.message.show {
+    opacity: 1;
 }
 
 .message-info {
